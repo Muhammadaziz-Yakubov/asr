@@ -16,22 +16,34 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/asr_tracker';
 
-// Middlewares
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
-app.use(cors({
+// Middlewares — CORS dinamik tekshiriladi (har bir so'rovda)
+const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. mobile apps, curl, Render health checks)
+    // No origin: curl, Render health checks, mobile apps
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
+
+    // Localhost (development)
+    if (origin.startsWith('http://localhost')) return callback(null, true);
+
+    // Vercel frontends (*.vercel.app + custom domains)
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+
+    // Explicit FRONTEND_URL (custom domain)
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (frontendUrl && origin === frontendUrl) return callback(null, true);
+
     callback(new Error(`CORS blocked: ${origin}`));
   },
   credentials: true,
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight OPTIONS requests explicitly
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
 // Routes Middleware
