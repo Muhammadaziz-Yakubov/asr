@@ -85,7 +85,7 @@ export default function LoginView({ onLoginSuccess }) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Samandar"
-                className="w-full apple-input pl-11 text-slate-800 font-medium placeholder-slate-400"
+                className="w-full apple-input !pl-11 text-slate-800 font-medium placeholder-slate-400"
                 disabled={loading}
                 autoFocus
               />
@@ -106,7 +106,7 @@ export default function LoginView({ onLoginSuccess }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full apple-input pl-11 pr-11 text-slate-800 font-medium placeholder-slate-400"
+                className="w-full apple-input !pl-11 !pr-11 text-slate-800 font-medium placeholder-slate-400"
                 disabled={loading}
               />
               <button
