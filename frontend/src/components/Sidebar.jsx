@@ -8,10 +8,11 @@ import {
   PackageCheck,
   Plus,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  LogOut
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, onQuickAction }) {
+export default function Sidebar({ activeTab, setActiveTab, onQuickAction, onLogout }) {
   const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
 
   const menuItems = [
@@ -70,6 +71,16 @@ export default function Sidebar({ activeTab, setActiveTab, onQuickAction }) {
               </button>
             );
           })}
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 active:scale-95 text-rose-600 hover:bg-rose-50 hover:text-rose-700 mt-8 group cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+              <span>Chiqish</span>
+            </button>
+          )}
         </nav>
 
         {/* Footer */}
@@ -238,6 +249,24 @@ export default function Sidebar({ activeTab, setActiveTab, onQuickAction }) {
                 <span className="text-sm font-semibold text-slate-800">Daromad & Moliya hisoboti</span>
               </button>
             </div>
+
+            {/* Logout Action (iOS separate group style) */}
+            {onLogout && (
+              <div className="bg-white/95 rounded-2xl overflow-hidden border border-slate-200/30 shadow-sm mb-4">
+                <button 
+                  onClick={() => {
+                    setIsActionSheetOpen(false);
+                    onLogout();
+                  }}
+                  className="w-full flex items-center gap-3.5 px-4 py-4 hover:bg-rose-50 active:bg-rose-100 transition-colors text-left cursor-pointer text-rose-600 font-bold"
+                >
+                  <div className="bg-rose-100 text-rose-600 p-2 rounded-xl">
+                    <LogOut className="w-4 h-4" />
+                  </div>
+                  <span>Tizimdan chiqish</span>
+                </button>
+              </div>
+            )}
 
             {/* Cancel Button (iOS separate style) */}
             <button 

@@ -9,6 +9,9 @@ import storesRouter from './routes/stores.js';
 import ordersRouter from './routes/orders.js';
 import paymentsRouter from './routes/payments.js';
 import financeRouter from './routes/finance.js';
+import authRouter from './routes/auth.js';
+import authMiddleware from './middleware/auth.js';
+import { seedUser } from './utils/seed.js';
 
 dotenv.config();
 
@@ -38,11 +41,12 @@ app.options('{*path}', cors(corsOptions));
 app.use(express.json());
 
 // Routes
-app.use('/api/dashboard', dashboardRouter);
-app.use('/api/stores', storesRouter);
-app.use('/api/orders', ordersRouter);
-app.use('/api/payments', paymentsRouter);
-app.use('/api/finance', financeRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/dashboard', authMiddleware, dashboardRouter);
+app.use('/api/stores', authMiddleware, storesRouter);
+app.use('/api/orders', authMiddleware, ordersRouter);
+app.use('/api/payments', authMiddleware, paymentsRouter);
+app.use('/api/finance', authMiddleware, financeRouter);
 
 // Health Check
 app.get('/api/health', (req, res) => {
@@ -51,8 +55,12 @@ app.get('/api/health', (req, res) => {
 
 // Database connection
 mongoose.connect(MONGODB_URI)
-  .then(() => {
+  .then(async () => {
     console.log('MongoDB database connection established successfully.');
+    
+    // Automatic seeding of Samandar user
+    await seedUser();
+
     app.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT}`);
     });

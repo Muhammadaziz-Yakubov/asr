@@ -6,6 +6,44 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
+// Automatically inject JWT token into all requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Handle 401 Unauthorized globally
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.dispatchEvent(new Event('auth-unauthorized'));
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authService = {
+  login: async (username, password) => {
+    const res = await api.post('/auth/login', { username, password });
+    return res.data;
+  },
+  verify: async () => {
+    const res = await api.get('/auth/verify');
+    return res.data;
+  },
+};
+
 export const dashboardService = {
   getStats: async () => {
     const res = await api.get('/dashboard');
