@@ -78,7 +78,7 @@ export default function LoginView({ onLoginSuccess }) {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <User className="w-4.5 h-4.5 stroke-[2]" />
+                <User className="w-4.5 h-4.5 stroke-[2] mr-2" />
               </div>
               <input
                 type="text"
@@ -99,7 +99,7 @@ export default function LoginView({ onLoginSuccess }) {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Lock className="w-4.5 h-4.5 stroke-[2]" />
+                <Lock className="w-4.5 h-4.5 stroke-[2] mr-2" />
               </div>
               <input
                 type={showPassword ? 'text' : 'password'}
